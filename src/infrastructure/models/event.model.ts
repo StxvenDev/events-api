@@ -11,11 +11,11 @@ const eventSchema = new mongoose.Schema<IEvent>({
     type : String,
     require : true
   },
-  Description : {
+  description : {
     type : String,
     require : true
   },
-  Date : {
+  date : {
     type : Date,
     require : true
   },
@@ -23,14 +23,14 @@ const eventSchema = new mongoose.Schema<IEvent>({
     type : String,
     require : true
   },
-  Organizer : {
+  organizer : {
     type : String,
     require : true
   }
 });
 
 eventSchema.methods.toJSON = function () {
-  const { __v,...event } = this.toObject();
+  const { __v, _id, ...event } = this.toObject();
   return event;
 }
 

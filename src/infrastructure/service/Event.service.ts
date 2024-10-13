@@ -1,3 +1,4 @@
+import { NotFoundError } from "../../Domain/Errors/NotFoundError";
 import { IEvent, IEventCreate } from "../../Domain/interfaces/Event.interfaces";
 import { IEventServices } from "../../Domain/Services/IEvent.services";
 import { IGenerateIdService } from "../interface/IGenerateId.interface";
@@ -24,18 +25,20 @@ export class EventService implements IEventServices{
     return events;
   }
 
-  async getById( id : IEvent["id"] ) : Promise<IEvent> {
-    const {...event} = await this.event.findById(id);
+  async getById( id : IEvent["id"] ) : Promise<IEvent | null> {
+    const event = await this.event.findOne({id});
+    if(!event)
+      throw new NotFoundError();
     return event;
   }
 
-  async update( id: IEvent["id"], event : Partial<IEvent> ) : Promise<IEvent>{
-    const {...eventUpdated} = await this.event.findByIdAndUpdate(id, event, {returnDocument:'after'});
+  async update( id: IEvent["id"], event : Partial<IEvent> ) : Promise<IEvent | null>{
+    const eventUpdated = await this.event.findOneAndUpdate({id}, event, {returnDocument:'after'});
     return eventUpdated;
   }
 
-  async delete(id: IEvent["id"]) : Promise<IEvent> {
-    const {...eventDeleted} = await this.event.findByIdAndDelete(id, {returnDocument:'after'});
+  async delete(id: IEvent["id"]) : Promise<IEvent | null> {
+    const eventDeleted  = await this.event.findOneAndDelete({id}, {returnDocument:'after'});
     return eventDeleted;
   }
   

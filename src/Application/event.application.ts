@@ -1,6 +1,7 @@
-import { InternatError } from "../Domain/Errors/InternalError";
+import { InternalError } from "../Domain/Errors/InternalError";
 import { NotCreatedError } from "../Domain/Errors/NotCreatedError";
 import { NotFoundError } from "../Domain/Errors/NotFoundError";
+import { NotUpdatedError } from "../Domain/Errors/NotUpdatedError";
 import { IEvent,IEventCreate } from "../Domain/interfaces/Event.interfaces";
 import { IEventServices } from "../Domain/Services/IEvent.services";
 
@@ -27,15 +28,15 @@ export class Event {
             throw new NotFoundError()
         }
     }
-    async getByIdEvent(id:string):Promise<IEvent>{
+    async getByIdEvent(id:string):Promise<IEvent | null>{
         try {
-            const getEventById = await this.EventServ.getById(id)
+            const getEventById = await this.EventServ.getById(id);
             return getEventById
         } catch (error) {
-            throw new NotFoundError()
+            throw new NotFoundError();
         }
     }
-    async updateEvent(id:string,event:Partial<IEvent>):Promise<IEvent>{
+    async updateEvent(id:string,event:Partial<IEvent>):Promise<IEvent | null>{
         try {
             const Event = await this.getByIdEvent(id) 
             if(!Event) throw new NotFoundError()
@@ -43,18 +44,18 @@ export class Event {
            const eventUpdated = await this.EventServ.update(id,event)
             return eventUpdated
         } catch (error) {
-            throw new InternatError()
+            throw new NotUpdatedError()
         }
     }
-    async DeleteEvent(id:string):Promise<boolean>{
+    async DeleteEvent(id:string):Promise<IEvent | null>{
         try {
             const Event = await this.getByIdEvent(id) 
             if(!Event) throw new NotFoundError()
             
            const eventDeleted = await this.EventServ.delete(id)
-            return true
+            return eventDeleted;
         } catch (error) {
-            throw new InternatError()
+            throw new InternalError()
         }
     }
 

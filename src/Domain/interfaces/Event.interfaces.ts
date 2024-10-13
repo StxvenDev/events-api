@@ -1,10 +1,10 @@
 export interface IEvent {
     id: string;
     title: string;
-    Description: string;
-    Date: Date;
+    description: string;
+    date: Date;
     location:string;
-    Organizer:string;
+    organizer:string;
 }
 
 export interface IEventCreate extends Omit<IEvent, "id"> {}
